@@ -32,15 +32,10 @@ public class GT4500Test {
     // Arrange
 
     // Act
-    boolean empty = false;
-    while (!empty) {
-      ship.fireTorpedo(FiringMode.SINGLE);
-      empty = mockStore1.isEmpty() || mockStore2.isEmpty();
-    }
-    boolean result = verify(mockStore1, times(10)).fire(1);
+    ship.fireTorpedo(FiringMode.SINGLE);
 
     // Assert
-    assertEquals(true, result);
+    verify(mockStore1, times(1)).fire(1);
   }
 
   @Test
