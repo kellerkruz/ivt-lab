@@ -9,10 +9,22 @@ import org.junit.Test;
 public class GT4500Test {
 
   private GT4500 ship;
+  private WeaponStore mockStore1;
+  private WeaponStore mockStore2;
 
   @Before
   public void init(){
-    this.ship = new GT4500();
+    WeaponStore store1 = mock(TorpedoStore.class);
+    WeaponStore store2 = mock(TorpedoStore.class);
+    //WeaponStore store1 = new TorpedoStore(10);
+    //WeaponStore store2 = new TorpedoStore(10);
+
+    when(store1.fire(1)).thenReturn(true);
+    when(store2.fire(1)).thenReturn(true);
+
+    this.ship = new GT4500(store1, store2);
+    this.mockStore1 = store1;
+    this.mockStore2 = store2;
   }
 
   @Test
@@ -20,7 +32,12 @@ public class GT4500Test {
     // Arrange
 
     // Act
-    boolean result = ship.fireTorpedo(FiringMode.SINGLE);
+    boolean empty = false;
+    while (!empty) {
+      ship.fireTorpedo(FiringMode.SINGLE);
+      empty = mockStore1.isEmpty() || mockStore2.isEmpty();
+    }
+    boolean result = verify(mockStore1, times(10)).fire(1);
 
     // Assert
     assertEquals(true, result);
